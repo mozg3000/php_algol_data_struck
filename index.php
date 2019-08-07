@@ -30,25 +30,45 @@
                             <button class="btn btn-light" class="item" data-type="folder" data-path="<?php echo $folder->getPathname()?>">
                                 <?php echo $folder->getFilename();?>
                             </button>
-                            <?php if($_GET && $_GET['folder'] === $folder->getPathname()):?>
-                                <ul>
-                                    <?php $subdir = new DirectoryIterator($_GET['folder']);?>
-                                    <li>
-                                        <?php foreach ($subdir as $folder):?>
+                            <?php print_r($_GET['folder']);?>
+                            <?php print_r($folder->getPathname());?>
+                            <?php echo (strpos(($_GET['folder']), $folder->getPathname()));?>
 
-                                        <?php if ($folder->isDir()):?>
-                                            <b>+</b>
-                                            <button data-type="folder" data-path="<?php echo $folder->getPathname()?>">
-                                                <?php echo $folder->getFilename();?>
-                                            </button>
-                                        <?php else:?>
-                                            <button>
-                                                <?php echo $folder->getFilename();?>
-                                            </button>
-                                        <?php endif;?>
-                                    </li>
-                                    <?php endforeach;?>
-                                </ul>
+<!--                            --><?php //if($_GET && $_GET['folder'] === $folder->getPathname()):?>
+                            <?php if(strpos(($_GET['folder']), $folder->getPathname()) !== false):?>
+                                <?php
+                                    $subdirs = explode('\\', substr($_GET['folder'], 3));
+
+                                var_dump('subdirs',$subdirs);
+                                var_dump(count($subdirs));
+                                ?>
+                                <?php for ($i=0, $disk='c:\\'; $i<count($subdirs);++$i):?>
+                                    <?php
+                                    //print_r($disk);
+                                    var_dump('disk', $disk);
+                                    $disk = $disk  . $subdirs[$i];
+                                    var_dump('disk', $disk);
+                                        $path = new DirectoryIterator($disk);
+                                    ?>
+
+                                    <ul>
+                                        <?php foreach ($path as $subfolder):?>
+                                            <li>
+                                                <?php if ($subfolder->isDir()):?>
+                                                    <b>+</b>
+                                                    <button data-type="folder" data-path="<?php echo $subfolder->getPathname()?>">
+                                                        <?php echo $subfolder->getFilename();?>
+                                                    </button>
+                                                    <?php print_r($subfolder->getPathname());?>
+                                                <?php else:?>
+                                                    <button>
+                                                        <?php echo $subfolder->getFilename();?>
+                                                    </button>
+                                                <?php endif;?>
+                                            </li>
+                                        <?php endforeach;?>
+                                    </ul>
+                                <?php endfor;?>
                             <?endif;?>
                         <?php else:?>
                             <button class="btn btn-light" class="item">
