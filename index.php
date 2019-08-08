@@ -49,8 +49,9 @@
                                     $disk = $disk  . $subdirs[$i];
                                     var_dump('disk', $disk);
                                         $path = new DirectoryIterator($disk);
-                                    ?>
 
+                                    ?>
+                                    <?php var_dump('path', $path->getPathname());?>
                                     <ul>
                                         <?php foreach ($path as $subfolder):?>
                                             <li>
