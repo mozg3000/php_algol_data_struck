@@ -38,39 +38,45 @@ class expressionTree{
         '+' => 50,
         '-' => 50,
     ];
-    public function build(array $tokens){
+    public function build(array $tokens):Node{
 
-        $ptokens = $this->prioritizeTokens($tokens);
+        $pointer = 0;
+        while ($pointer < count($tokens)){
+
+            if($tokens[$pointer] === '('){
+
+                $subtokens = [];
+
+                while ($tokens[$pointer] !== ')'){
+
+                    $subtokens[] = $tokens[$pointer];
+                    $pointer++;
+                }
+                $this->add($this->build($subtokens));
+
+            }else{
+
+                $this->add($tokens[$pointer]);
+            }
+            $pointer++;
+        }
     }
     private function add($value){
 
+        if($this->headIsNull()){
 
+            $this->head = new Node($value);
+        }else{
+
+            $this->addNode($value);
+        }
     }
     private function addNode($value){
 
-
+        if(self::priority[$value] < $this->head->value)
     }
     private function headIsNull():bool{
 
         return is_null($this->head);
-    }
-    private function prioritizeTokens(array $tokens): array {
-
-        $prioritizedTokens = [];
-
-        for($i=0; $i<count($tokens)-1; $i++){
-
-            if(self::priority($tokens[$i])){
-
-                if(!in_array($tokens[$i], $prioritizedTokens)){
-
-                    $prioritizedTokens[$i] = [$tokens[$i]];
-                }
-            }else{
-
-                $prioritizedTokens['0'] = $tokens[$i];
-            }
-        }
-        return $prioritizedTokens;
     }
 }
