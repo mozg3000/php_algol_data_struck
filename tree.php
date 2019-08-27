@@ -5,7 +5,7 @@
  * Date: 26.08.2019
  * Time: 17:53
  */
-$formula = '7*y';
+$formula = '7*y*9-z*6';
 //$formula = '(x+42)^2+7*y-z';
 $tokens =[];
 
@@ -60,7 +60,7 @@ class ExpressionTree{
                     $subtokens[] = $tokens[$pointer];
                     $pointer++;
                 }
-                $this->add($this->build($subtokens));
+               $this->build($subtokens);
 
             }else{
 
@@ -74,29 +74,19 @@ class ExpressionTree{
         if($this->headIsNull()){
 
             $this->head = new Node($value);
+            var_dump('head value', $value);
         }else{
 
-            if($value instanceof Node){
-
-                if(is_null($this->head->left)){
-
-                    $this->head->left = $value;
-                }else{
-
-                    $this->head->right = $value;
-                }
-            }else{
-
-                $this->addNode($value);
-            }
+            $this->addNode($value);
         }
     }
     private function addNode($value){
 
+        var_dump('value', $value);
         $priority_new = array_key_exists($value, self::priority)?self::priority[$value]:100;
         $priority = array_key_exists($this->head->value,self::priority)? self::priority[$this->head->value]:100;
-
-        if($priority_new < $priority){
+        var_dump('$priority_new', $priority_new, '$priority', $priority);
+        if($priority_new <= $priority){
 
             $node = new Node($value);
 
@@ -107,11 +97,11 @@ class ExpressionTree{
 
             if(is_null($this->head->left)){
 
-                $this->head->left = $value;
+                $this->head->left = new Node($value);
 
             }else{
 
-                $this->head->right = $value;
+                $this->head->right = new Node($value);
             }
         }
     }
