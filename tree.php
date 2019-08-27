@@ -68,12 +68,23 @@ class expressionTree{
             $this->head = new Node($value);
         }else{
 
-            $this->addNode($value);
+            if($value instanceof Node){
+
+
+            }else{
+
+                $this->addNode($value);
+            }
         }
     }
     private function addNode($value){
 
-        if(self::priority[$value] < $this->head->value)
+        if(self::priority[$value] < self::priority[$this->head->value]){
+
+            $node = new Node($value);
+            $node->left = $this->head;
+            $this->head = $node;
+        }
     }
     private function headIsNull():bool{
 
