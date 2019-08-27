@@ -40,6 +40,10 @@ class expressionTree{
     ];
     public function build(array $tokens){
 
+        $ptokens = $this->prioritizeTokens($tokens);
+    }
+    private function add($value){
+
 
     }
     private function addNode($value){
@@ -54,18 +58,19 @@ class expressionTree{
 
         $prioritizedTokens = [];
 
-        for($i=0; $i<count($tokens); $i++){
+        for($i=0; $i<count($tokens)-1; $i++){
 
             if(self::priority($tokens[$i])){
 
-                $prioritizedTokens[$i] = $e;
+                if(!in_array($tokens[$i], $prioritizedTokens)){
+
+                    $prioritizedTokens[$i] = [$tokens[$i]];
+                }
             }else{
 
-                $prioritizedTokens['0'] = $e;
+                $prioritizedTokens['0'] = $tokens[$i];
             }
         }
-        return array_map(function($e,$i){
-             "self::priority($e)" => "$e";
-        }, $tokens);
+        return $prioritizedTokens;
     }
 }
