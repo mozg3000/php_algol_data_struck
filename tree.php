@@ -5,12 +5,17 @@
  * Date: 26.08.2019
  * Time: 17:53
  */
-$formula = '(x+42)^2+7*y-z';
+$formula = '7*y';
+//$formula = '(x+42)^2+7*y-z';
 $tokens =[];
 
 for($i=0; $i<strlen($formula); $i++) {
     array_push($tokens, $formula{$i});
 }
+$tree = new ExpressionTree();
+$tree->build($tokens);
+
+print_r($tree);
 //print_r($lexemes);
 class Node{
 
@@ -26,8 +31,11 @@ class Node{
 }
 //print_r($o = new Node());
 //print_r(is_null($o->value));
-class expressionTree{
+class ExpressionTree{
 
+    /*
+     * @property Node $head
+     */
     public $head= null;
     const  priority = [
 
@@ -38,7 +46,7 @@ class expressionTree{
         '+' => 50,
         '-' => 50,
     ];
-    public function build(array $tokens):Node{
+    public function build(array $tokens){
 
         $pointer = 0;
         while ($pointer < count($tokens)){
@@ -70,7 +78,13 @@ class expressionTree{
 
             if($value instanceof Node){
 
+                if(is_null($this->head->left)){
 
+                    $this->head->left = $value;
+                }else{
+
+                    $this->head->right = $value;
+                }
             }else{
 
                 $this->addNode($value);
@@ -79,11 +93,26 @@ class expressionTree{
     }
     private function addNode($value){
 
-        if(self::priority[$value] < self::priority[$this->head->value]){
+        $priority_new = array_key_exists($value, self::priority)?self::priority[$value]:100;
+        $priority = array_key_exists($this->head->value,self::priority)? self::priority[$this->head->value]:100;
+
+        if($priority_new < $priority){
 
             $node = new Node($value);
+
             $node->left = $this->head;
             $this->head = $node;
+
+        }else{
+
+            if(is_null($this->head->left)){
+
+                $this->head->left = $value;
+
+            }else{
+
+                $this->head->right = $value;
+            }
         }
     }
     private function headIsNull():bool{
